@@ -12,10 +12,50 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          Foot Fans Only
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <q-btn flat round icon="person">
+          <q-menu transition-show="jump-down" transition-hide="scale">
+            <div class="row no-wrap q-pa-md justify-center items-center">
+              <q-list class="rounded-borders text-primary">
+                <q-item clickable v-ripple to="/profile"
+                  active-class="text-white bg-blue-9">
+                  <q-item-section avatar>
+                    <q-icon name="manage_accounts" />
+                  </q-item-section>
+
+                  <q-item-section>Profile</q-item-section>
+                </q-item>
+
+                <q-separator spaced />
+
+                <q-item clickable v-ripple to="/" exact
+                  active-class="text-white bg-blue-9">
+                  <q-item-section avatar>
+                    <q-icon name="home" />
+                  </q-item-section>
+
+                  <q-item-section>Accueil</q-item-section>
+                </q-item>
+              </q-list>
+
+              <q-separator vertical inset class="q-mx-md" />
+
+              <div class="column items-center">
+                <q-avatar size="72px">
+                  <img src="src/assets/avatar.png" />
+                </q-avatar>
+
+                <div class="q-mt-xs q-mb-md text-center text-weight-medium">
+                  test
+                </div>
+
+                <q-btn color="primary" label="Déconnecter" push size="sm" v-close-popup />
+              </div>
+            </div>
+          </q-menu>
+        </q-btn>
       </q-toolbar>
     </q-header>
 
@@ -28,7 +68,7 @@
         <q-item-label
           header
         >
-          Essential Links
+          Menu
         </q-item-label>
 
         <EssentialLink
@@ -51,47 +91,17 @@ import EssentialLink from 'components/EssentialLink.vue';
 
 const linksList = [
   {
-    title: 'Docs',
+    title: 'Les événements',
     caption: 'quasar.dev',
-    icon: 'school',
+    icon: 'event',
     link: 'https://quasar.dev'
   },
   {
-    title: 'Github',
+    title: 'Créer un événements',
     caption: 'github.com/quasarframework',
-    icon: 'code',
+    icon: 'edit',
     link: 'https://github.com/quasarframework'
   },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
 ];
 
 export default defineComponent({
