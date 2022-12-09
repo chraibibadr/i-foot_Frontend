@@ -2,24 +2,16 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title>
-          Foot Fans Only
+          {{ route.meta.title || 'Foot Fans Only' }}
         </q-toolbar-title>
-
-        <q-btn flat round icon="person">
+        <!-- <q-btn flat round icon="person">
           <q-menu transition-show="jump-down" transition-hide="scale">
             <div class="row no-wrap q-pa-md justify-center items-center">
               <q-list class="rounded-borders text-primary">
-                <q-item clickable v-ripple to="/profile"
+                <q-item clickable v-ripple :active="link === 'profile'" @click="link = 'profile'" to="/profile"
                   active-class="text-white bg-blue-9">
                   <q-item-section avatar>
                     <q-icon name="manage_accounts" />
@@ -30,7 +22,7 @@
 
                 <q-separator spaced />
 
-                <q-item clickable v-ripple to="/" exact
+                <q-item clickable v-ripple :active="link === ''" @click="link = '/'" to="/" exact
                   active-class="text-white bg-blue-9">
                   <q-item-section avatar>
                     <q-icon name="home" />
@@ -48,35 +40,36 @@
                 </q-avatar>
 
                 <div class="q-mt-xs q-mb-md text-center text-weight-medium">
-                  test
+                  @{{ username }}
                 </div>
 
-                <q-btn color="primary" label="Déconnecter" push size="sm" v-close-popup />
+                <q-btn color="primary" label="Déconnecter" push size="sm" v-close-popup @click="logout" />
               </div>
             </div>
           </q-menu>
-        </q-btn>
+        </q-btn> -->
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Menu
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+      <q-scroll-area class="fit">
+        <q-list>
+          <q-item-label header> Menu </q-item-label>
+          <template v-for="(menuItem, index) in linksList" :key="index">
+            <q-item :to="menuItem.link" exact clickable v-ripple v-if="
+              route.path.includes(menuItem.context) || menuItem.context == '/'
+            ">
+              <q-item-section avatar>
+                <q-icon :name="menuItem.icon" />
+              </q-item-section>
+              <q-item-section>
+                {{ menuItem.label }}
+              </q-item-section>
+            </q-item>
+            <q-separator :key="'sep' + index" v-if="menuItem.separator && route.path.includes(menuItem.context)" />
+          </template>
+        </q-list>
+      </q-scroll-area>
     </q-drawer>
 
     <q-page-container>
@@ -85,42 +78,47 @@
   </q-layout>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
-import EssentialLink from 'components/EssentialLink.vue';
+<script>
+import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 const linksList = [
   {
-    title: 'Les événements',
-    caption: 'quasar.dev',
+    context: 'event',
+    label: 'Vos annonces',
     icon: 'event',
-    link: 'https://quasar.dev'
+    link: '/event',
+    separator: true,
   },
   {
-    title: 'Créer un événements',
-    caption: 'github.com/quasarframework',
+    context: 'event',
+    label: 'Nouvelle annonce',
     icon: 'edit',
-    link: 'https://github.com/quasarframework'
+    link: '/event/new',
+    separator: true,
+  },
+  {
+    context: 'event',
+    label: 'Les demandes',
+    icon: 'topic',
+    link: '/event/demands',
+    separator: true,
   },
 ];
 
-export default defineComponent({
+export default {
   name: 'MainLayout',
-
-  components: {
-    EssentialLink
-  },
-
-  setup () {
-    const leftDrawerOpen = ref(false)
+  setup() {
+    const route = useRoute();
+    const leftDrawerOpen = ref(false);
 
     return {
-      essentialLinks: linksList,
+      linksList,
       leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
-    }
-  }
-});
+      toggleLeftDrawer() { leftDrawerOpen.value = !leftDrawerOpen.value; },
+      link: ref(null),
+      route,
+    };
+  },
+};
 </script>
