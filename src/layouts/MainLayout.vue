@@ -69,6 +69,21 @@
             <q-separator :key="'sep' + index" v-if="menuItem.separator && route.path.includes(menuItem.context)" />
           </template>
         </q-list>
+        <q-list>
+          <template v-for="(menuItem, index) in terrainList" :key="index">
+            <q-item :to="menuItem.link" exact clickable v-ripple v-if="
+              route.path.includes(menuItem.context) || menuItem.context == '/'
+            ">
+              <q-item-section avatar>
+                <q-icon :name="menuItem.icon" />
+              </q-item-section>
+              <q-item-section>
+                {{ menuItem.label }}
+              </q-item-section>
+            </q-item>
+            <q-separator :key="'sep' + index" v-if="menuItem.separator && route.path.includes(menuItem.context)" />
+          </template>
+        </q-list>
       </q-scroll-area>
     </q-drawer>
 
@@ -106,6 +121,23 @@ const linksList = [
   },
 ];
 
+const terrainList = [
+  {
+    context: 'terrain',
+    label: 'Les terrains',
+    icon: 'terrain',
+    link: '/terrain',
+    separator: true,
+  },
+  {
+    context: 'terrain',
+    label: 'Nouveau terrain',
+    icon: 'edit',
+    link: '/terrain/new',
+    separator: true,
+  },
+];
+
 export default {
   name: 'MainLayout',
   setup() {
@@ -114,6 +146,7 @@ export default {
 
     return {
       linksList,
+      terrainList,
       leftDrawerOpen,
       toggleLeftDrawer() { leftDrawerOpen.value = !leftDrawerOpen.value; },
       link: ref(null),
