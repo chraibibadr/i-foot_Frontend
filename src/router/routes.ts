@@ -10,21 +10,36 @@ const routes: RouteRecordRaw[] = [
           title: 'Nouvelle annonce',
         },
         path: '/event/new',
-        component: () => import('pages/event/newEvent.vue')
+        component: () => import('pages/event/newEvent.vue'),
       },
       {
         meta: {
           title: 'Vos annonces',
         },
         path: '/event',
-        component: () => import('pages/event/events.vue')
+        component: () => import('pages/event/events.vue'),
       },
       {
         meta: {
           title: 'Les demandes',
         },
         path: '/event/demands',
-        component: () => import('pages/event/eventDemands.vue')
+        component: () => import('pages/event/eventDemands.vue'),
+      },
+
+      {
+        meta: {
+          title: 'Nouveau terrain',
+        },
+        path: '/terrain/new',
+        component: () => import('pages/terrain/newTerrain.vue'),
+      },
+      {
+        meta: {
+          title: 'Les terrains',
+        },
+        path: '/terrain',
+        component: () => import('pages/terrain/terrains.vue'),
       },
     ],
   },
