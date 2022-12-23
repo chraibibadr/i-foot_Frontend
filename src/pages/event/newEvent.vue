@@ -5,12 +5,12 @@
         <h5 class="text-center text-left text-weight-bold">
           Nouvelle annnoce
         </h5>
-        <q-form @submit="submitEvent" class="q-gutter-md" ref="formEvent">
+        <q-form @submit="newEvent" class="q-gutter-md" ref="formEvent">
           <div class="row justify-center">
             <q-input class="col-xs-12 col-sm-6 col-md-6 q-px-sm" rounded filled clearable v-model="title" lazy-rules
               :rules="[(val) => (val && val.length > 0) || 'Requis']" label="Titre" />
             <q-select class="col-xs-12 col-sm-6 col-md-6 q-px-sm" rounded filled transition-show="jump-up"
-              transition-hide="scale" v-model="selectPitch" :options="optionsPitch" lazy-rules
+              transition-hide="scale" @filter="filterPitch" v-model="selectPitch" :options="optionsPitch" lazy-rules
               :rules="[(val) => !!val || 'Requis']" label="Terrain" />
           </div>
           <div class="row justify-center">
@@ -51,30 +51,7 @@
 
 <script>
 import { ref } from 'vue';
-
-
-const pitches = [
-  {
-    name: 'Vitoria',
-    capacity: 22,
-    adress: 'Marrakech SYBA 3'
-  },
-  {
-    name: 'Taher Lkhlej',
-    capacity: 12,
-    adress: 'Marrakech Mhamid'
-  },
-  {
-    name: 'Zaytoun',
-    capacity: 14,
-    adress: 'Marrakech Gueliz'
-  },
-  {
-    name: 'Agdal',
-    capacity: 10,
-    adress: 'Marrakech Daoudiat'
-  }
-]
+import { axios } from 'boot/axios';
 
 export default ({
   name: 'NewEvent',
@@ -83,21 +60,55 @@ export default ({
 
     const formEvent = ref(null);
     const title = ref(null);
+
     const selectPitch = ref(null);
     const optionsPitch = ref(null);
+    const pitches = [];
+
     const date = ref(null);
     const selectVille = ref(null);
     const selectZone = ref(null);
     const description = ref(null);
 
-    optionsPitch.value = pitches.map(({ name }) => name);
+    // add event function
+    const newEvent = async () => {
+      const { data } = await axios.post('annonces/add', {
+        titre: title.value,
+        description: description.value,
+        ville: selectVille.value,
+        zone: selectZone.value,
+        date: date.value,
+        terrain: selectPitch.value
+      });
+
+      if (data) {
+        console.log("Done");
+      } else console.log("Not done !");
+    };
 
     return {
       formEvent,
       title,
-      selectPitch,
+      filterPitch(val, update, abort) {
+        if (optionsPitch.value !== null) {
+          update();
+          return;
+        }
+
+        setTimeout(() => {
+          update(async () => {
+            const { data } = await axios.get('terrains/all');
+            pitches.splice(0, pitches.length);
+            data.forEach((element) => {
+              pitches.push(element.nom);
+            });
+            optionsPitch.value = pitches;
+          });
+        }, 500);
+      },
       optionsPitch,
       date,
+      newEvent,
       selectVille,
       optionsVille: ['Marrakech', 'Rabat', 'Casablanca'],
       selectZone,
