@@ -1,10 +1,10 @@
 <template>
   <q-page>
-    <q-table ref="eventTableRef" title="Vos annonces" no-data-label="Aucun enregistrements trouvés"
+    <q-table ref="eventTableRef" title="Vos terrains" no-data-label="Aucun enregistrements trouvés"
       no-results-label="Aucun enregistrements correspondants trouvés" loading-label="Chargement"
       rows-per-page-label="Element par page" :dense="$q.screen.lt.md" :rows="rows" bordered
-      table-header-class="text-blue" :columns="columns" row-key="_id" v-model:pagination="pagination" :loading="loading"
-      :filter="filter" binary-state-sort :visible-columns="visibleColumns" @request="onRequest">
+      table-header-class="text-primary" :columns="columns" row-key="_id" v-model:pagination="pagination"
+      :loading="loading" :filter="filter" binary-state-sort :visible-columns="visibleColumns" @request="onRequest">
       <template v-slot:top-right="props">
         <q-input dense debounce="1000" v-model="filter" placeholder="Filtrer">
           <template v-slot:append>
