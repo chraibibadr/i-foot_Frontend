@@ -82,8 +82,8 @@ export default ({
       });
 
       if (data) {
-        console.log("Done");
-      } else console.log("Not done !");
+        console.log("SUCCESS");
+      } else console.log("ERROR");
     };
 
     return {
