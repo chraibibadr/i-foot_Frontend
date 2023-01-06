@@ -3,10 +3,9 @@
     <q-table ref="eventTableRef" title="Vos terrains" no-data-label="Aucun enregistrements trouvés"
       no-results-label="Aucun enregistrements correspondants trouvés" loading-label="Chargement"
       rows-per-page-label="Element par page" :dense="$q.screen.lt.md" :rows="rows" bordered
-      table-header-class="text-primary" :columns="columns" row-key="_id" v-model:pagination="pagination"
-      :loading="loading" :filter="filter" binary-state-sort :visible-columns="visibleColumns" @request="onRequest">
+      table-header-class="text-primary" :columns="columns" row-key="id" :filter="filter" binary-state-sort>
       <template v-slot:top-right="props">
-        <q-input dense debounce="1000" v-model="filter" placeholder="Filtrer">
+        <q-input dense v-model="filter" placeholder="Filtrer">
           <template v-slot:append>
             <q-icon name="search" />
           </template>
@@ -25,27 +24,29 @@
 </template>
 
 <script>
+import { axios } from 'boot/axios';
+import { onMounted, ref } from 'vue';
 
 const columns = [
   {
-    name: '_id',
+    name: 'id',
     required: false,
-    field: '_id',
+    field: 'id',
     label: 'ID',
     align: 'left',
     sortable: true,
   },
   {
-    name: 'name',
+    name: 'nom',
     required: true,
-    field: 'name',
+    field: 'nom',
     label: 'Nom',
     align: 'left',
   },
   {
-    name: 'adress',
+    name: 'adresse',
     required: true,
-    field: 'adress',
+    field: 'adresse',
     label: 'Adresse',
     align: 'left',
   },
@@ -59,14 +60,27 @@ const columns = [
   },
 ];
 
+async function loadTerrains() {
+  const { data } = await axios.get('terrains/all');
+  return data;
+}
+
 export default ({
   name: 'TerrainsPage',
 
   setup() {
+    const rows = ref([]);
+
+    onMounted(async () => {
+      rows.value = await loadTerrains();
+    });
 
     return {
       columns,
+      rows,
+      filter: ref(''),
     }
   }
 })
 </script>
+
