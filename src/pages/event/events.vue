@@ -1,7 +1,7 @@
 <template>
   <q-page>
-    <q-table ref="eventTableRef" title="Vos annonces" no-data-label="Aucune annonce trouvés"
-      no-results-label="Aucun enregistrements correspondants trouvés" loading-label="Chargement"
+    <q-table ref="eventTableRef" title="Vos annonces" no-data-label="Aucune annonce trouvé"
+      no-results-label="Aucune annonce correspondante trouvé" loading-label="Chargement"
       rows-per-page-label="Element par page" :dense="$q.screen.lt.md" :rows="rows" bordered
       table-header-class="text-primary" :columns="columns" row-key="id" :filter="filter" binary-state-sort>
       <template v-slot:top-right="props">
@@ -12,6 +12,16 @@
         </q-input>
         <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
           @click="props.toggleFullscreen" class="q-ml-md" />
+      </template>
+      <template v-slot:body-cell-terrain="props">
+        <q-td :props="props">
+          {{ props.row.terrain.nom }}
+        </q-td>
+      </template>
+      <template v-slot:body-cell-date="props">
+        <q-td :props="props">
+          {{ props.row.date.substring(0, 10) }}
+        </q-td>
       </template>
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
@@ -112,6 +122,7 @@ const columns = [
 
 async function loadEvents() {
   const { data } = await axios.get('annonces/all');
+  console.log(data);
   return data;
 }
 
