@@ -16,7 +16,6 @@
       </template>
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
-          <q-btn dense round flat color="green" @click="showEditDialog(props.row)" icon="edit"></q-btn>
           <q-btn dense round flat color="red" @click="showDeleteDialog(props.row)" icon="delete"></q-btn>
         </q-td>
       </template>
@@ -25,12 +24,15 @@
 </template>
 
 <script>
+import { axios } from 'boot/axios';
+import { onMounted, ref } from 'vue';
+
 
 const columns = [
   {
-    name: '_id',
+    name: 'id',
     required: false,
-    field: '_id',
+    field: 'id',
     label: 'ID',
     align: 'left',
     sortable: true,
@@ -88,13 +90,24 @@ const columns = [
   },
 ];
 
+async function loadEvents() {
+  const { data } = await axios.get('annonces/all');
+  return data;
+}
+
 export default ({
   name: 'EventsPage',
 
   setup() {
+    const rows = ref([]);
+
+    onMounted(async () => {
+      rows.value = await loadEvents();
+    });
 
     return {
       columns,
+      rows,
     }
   }
 })

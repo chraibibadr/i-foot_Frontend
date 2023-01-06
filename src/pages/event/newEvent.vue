@@ -77,14 +77,33 @@ export default ({
         description: description.value,
         ville: selectVille.value,
         zone: selectZone.value,
-        date: date.value,
-        terrain: selectPitch.value
+        date: date.value.replaceAll("/", "-"),
+        terrain: {
+          id: selectPitch.value.value,
+          nom: selectPitch.value.label,
+          adresse: selectPitch.value.adresse,
+          capacity: selectPitch.value.capacity,
+          photos: selectPitch.value.photos,
+        }
       });
 
       if (data) {
         console.log("SUCCESS");
+        resetForm();
       } else console.log("ERROR");
     };
+
+    //RESET FORM
+    function resetForm() {
+      title.value =
+        description.value =
+        selectVille.value =
+        selectZone.value =
+        selectPitch.value =
+        date.value =
+        null;
+      formEvent.value.resetValidation();
+    }
 
     return {
       formEvent,
@@ -100,8 +119,9 @@ export default ({
             const { data } = await axios.get('terrains/all');
             pitches.splice(0, pitches.length);
             data.forEach((element) => {
-              pitches.push(element.nom);
+              pitches.push({ label: element.nom, value: element.id, capacity: element.capacity, adresse: element.adresse, photos: element.photos });
             });
+            console.log(pitches);
             optionsPitch.value = pitches;
           });
         }, 500);
@@ -113,7 +133,9 @@ export default ({
       optionsVille: ['Marrakech', 'Rabat', 'Casablanca'],
       selectZone,
       optionsZone: ['SYBA', 'Daoudiat', 'Gueliz'],
-      description
+      description,
+      selectPitch,
+      resetForm,
     }
   }
 })
