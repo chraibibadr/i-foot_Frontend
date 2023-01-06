@@ -1,12 +1,11 @@
 <template>
   <q-page>
-    <q-table ref="eventTableRef" title="Vos annonces" no-data-label="Aucun enregistrements trouvés"
+    <q-table ref="eventTableRef" title="Vos annonces" no-data-label="Aucune annonce trouvés"
       no-results-label="Aucun enregistrements correspondants trouvés" loading-label="Chargement"
       rows-per-page-label="Element par page" :dense="$q.screen.lt.md" :rows="rows" bordered
-      table-header-class="text-primary" :columns="columns" row-key="_id" v-model:pagination="pagination"
-      :loading="loading" :filter="filter" binary-state-sort :visible-columns="visibleColumns" @request="onRequest">
+      table-header-class="text-primary" :columns="columns" row-key="id" :filter="filter" binary-state-sort>
       <template v-slot:top-right="props">
-        <q-input dense debounce="1000" v-model="filter" placeholder="Filtrer">
+        <q-input dense v-model="filter" placeholder="Filtrer">
           <template v-slot:append>
             <q-icon name="search" />
           </template>
@@ -21,6 +20,27 @@
       </template>
     </q-table>
   </q-page>
+
+  <!-- start of delete confirmation dialog -->
+  <q-dialog v-model="deleteDialog" persistent>
+    <q-card>
+      <q-card-section>
+        <div class="text-h6">Suppression</div>
+      </q-card-section>
+      <q-separator inset />
+      <q-card-section class="row items-center">
+        <span class="q-mx-sm">
+          Voulez-vous vraiment supprimer cette annnoce !
+        </span>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn @click="deleteEvent" flat label="Confirmer" color="red" v-close-popup />
+        <q-btn flat label="Annuler" color="primary" v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+  <!-- end of delete confirmation dialog -->
 </template>
 
 <script>
@@ -100,14 +120,43 @@ export default ({
 
   setup() {
     const rows = ref([]);
+    const eventTableRef = ref();
+
 
     onMounted(async () => {
       rows.value = await loadEvents();
     });
 
+    // delete event function
+    const deleteEvent = async () => {
+      const { data } = await axios.delete('annonces/delete/' + selectedEvent.value);
+      if (data)
+        console.log('SUCCESS');
+      else
+        console.log('ERROR', data);
+
+      rows.value = await loadEvents();
+    };
+
+    const deleteDialog = ref(false);
+    const selectedEvent = ref(null);
+
+
+    // show delete dialog function
+    function showDeleteDialog(item) {
+      selectedEvent.value = item.id;
+      deleteDialog.value = true;
+    }
+
     return {
       columns,
       rows,
+      deleteDialog,
+      showDeleteDialog,
+      deleteEvent,
+      selectedEvent,
+      eventTableRef,
+      filter: ref(''),
     }
   }
 })
