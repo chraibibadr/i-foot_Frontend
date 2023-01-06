@@ -77,7 +77,7 @@ export default ({
         description: description.value,
         ville: selectVille.value,
         zone: selectZone.value,
-        date: date.value.replaceAll("/", "-"),
+        date: date.value.replaceAll('/', '-'),
         terrain: {
           id: selectPitch.value.value,
           nom: selectPitch.value.label,
@@ -88,9 +88,9 @@ export default ({
       });
 
       if (data) {
-        console.log("SUCCESS");
+        console.log('SUCCESS');
         resetForm();
-      } else console.log("ERROR");
+      } else console.log('ERROR');
     };
 
     //RESET FORM
