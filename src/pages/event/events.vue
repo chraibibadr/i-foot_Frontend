@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <q-table ref="eventTableRef" title="Vos annonces" no-data-label="Aucune annonce trouvé"
+    <q-table title="Vos annonces" no-data-label="Aucune annonce trouvé"
       no-results-label="Aucune annonce correspondante trouvé" loading-label="Chargement"
       rows-per-page-label="Element par page" :dense="$q.screen.lt.md" :rows="rows" bordered
       table-header-class="text-primary" :columns="columns" row-key="id" :filter="filter" binary-state-sort>
@@ -131,8 +131,6 @@ export default ({
 
   setup() {
     const rows = ref([]);
-    const eventTableRef = ref();
-
 
     onMounted(async () => {
       rows.value = await loadEvents();
@@ -140,12 +138,7 @@ export default ({
 
     // delete event function
     const deleteEvent = async () => {
-      const { data } = await axios.delete('annonces/delete/' + selectedEvent.value);
-      if (data)
-        console.log('SUCCESS');
-      else
-        console.log('ERROR', data);
-
+      await axios.delete('annonces/delete/' + selectedEvent.value);
       rows.value = await loadEvents();
     };
 
@@ -166,7 +159,6 @@ export default ({
       showDeleteDialog,
       deleteEvent,
       selectedEvent,
-      eventTableRef,
       filter: ref(''),
     }
   }
