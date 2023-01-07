@@ -3,7 +3,8 @@
     <q-table title="Vos terrains" no-data-label="Aucun terrain trouvé"
       no-results-label="Aucun terrain correspondant trouvés" loading-label="Chargement"
       rows-per-page-label="Element par page" :dense="$q.screen.lt.md" :rows="rows" bordered
-      table-header-class="text-primary" :columns="columns" row-key="id" :filter="filter" binary-state-sort>
+      table-header-class="text-primary" :visible-columns="visibleColumns" :columns="columns" row-key="id"
+      :filter="filter" binary-state-sort>
       <template v-slot:top-right="props">
         <q-input dense v-model="filter" placeholder="Filtrer">
           <template v-slot:append>
@@ -125,6 +126,12 @@ export default ({
       deleteTerrain,
       selectedTerrain,
       filter: ref(''),
+      visibleColumns: ref([
+        'nom',
+        'adresse',
+        'capacity',
+        'actions',
+      ]),
     }
   }
 })

@@ -65,10 +65,18 @@ export default ({
     const optionsPitch = ref(null);
     const pitches = [];
 
-    const date = ref(null);
+    const date = ref(today);
     const selectVille = ref(null);
     const selectZone = ref(null);
     const description = ref(null);
+
+    // get toady date : yyyy/mm/dd
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '/' + mm + '/' + dd;
 
     // add event function
     const newEvent = async () => {
@@ -99,9 +107,9 @@ export default ({
         description.value =
         selectVille.value =
         selectZone.value =
-        selectPitch.value =
-        date.value =
-        null;
+        selectPitch.value = null;
+      date.value = today;
+
       formEvent.value.resetValidation();
     }
 
