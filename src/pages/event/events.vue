@@ -1,9 +1,10 @@
 <template>
   <q-page>
-    <q-table title="Vos annonces" no-data-label="Aucune annonce trouvé"
+    <q-table :grid="$q.screen.xs" title="Vos annonces" no-data-label="Aucune annonce trouvé"
       no-results-label="Aucune annonce correspondante trouvé" loading-label="Chargement"
       rows-per-page-label="Element par page" :dense="$q.screen.lt.md" :rows="rows" bordered
-      table-header-class="text-primary" :columns="columns" row-key="id" :filter="filter" binary-state-sort>
+      table-header-class="text-primary" :visible-columns="visibleColumns" :columns="columns" row-key="id"
+      :filter="filter" binary-state-sort>
       <template v-slot:top-right="props">
         <q-input dense v-model="filter" placeholder="Filtrer">
           <template v-slot:append>
@@ -27,6 +28,29 @@
         <q-td :props="props">
           <q-btn dense round flat color="red" @click="showDeleteDialog(props.row)" icon="delete"></q-btn>
         </q-td>
+      </template>
+      <template v-slot:item="props">
+        <div class="q-pa-xs col-xs-12 col-sm-6 col-md-4">
+          <q-card>
+            <q-card-section class="text-center">
+              <strong>{{ props.row.titre }}</strong>
+              <q-btn dense round flat color="red" @click="showDeleteDialog(props.row)" icon="delete"></q-btn>
+            </q-card-section>
+            <q-separator />
+            <q-card-section>
+              <div class="q-table__grid-item-title">Terrain</div>
+              {{ props.row.terrain.nom }}
+              <div class="q-table__grid-item-title">Description</div>
+              {{ props.row.description }}
+              <div class="q-table__grid-item-title">Date</div>
+              {{ props.row.date.substring(0, 10) }}
+              <div class="q-table__grid-item-title">Ville</div>
+              {{ props.row.ville }}
+              <div class="q-table__grid-item-title">Zone</div>
+              {{ props.row.zone }}
+            </q-card-section>
+          </q-card>
+        </div>
       </template>
     </q-table>
   </q-page>
@@ -160,6 +184,15 @@ export default ({
       deleteEvent,
       selectedEvent,
       filter: ref(''),
+      visibleColumns: ref([
+        'titre',
+        'terrain',
+        'date',
+        'description',
+        'ville',
+        'zone',
+        'actions',
+      ]),
     }
   }
 })
